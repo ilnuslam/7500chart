@@ -124,6 +124,9 @@ def main():
                     elif float(cell_dict[alp][29]) / np.average(nc_num) >= 1.5:
                         buttons[index].color = 'orange'
                         buttons[index].hovercolor = 'wheat'
+                    else:
+                        buttons[index].color = 'lightblue'
+                        buttons[index].hovercolor = '#7fb1b3'
                 elif index not in hide_index:
                     lines[index].set_alpha(0.0)
                     buttons[index].color = 'cadetblue'
@@ -155,18 +158,21 @@ def main():
                     for col in range(12):
                         alph = f'{chr(row + 65)}{col + 1}'
                         if i not in hide_index and i not in nc:
-                            if float(cell_dict[alph][29]) / np.average(nc_num) >= 2:
+                            if float(cell_dict[alph][29]) / np.average(nc_num) >= 2 and button_states[i]:
                                 print(cell_dict[alph][29])
                                 buttons[i].color = 'red'
                                 buttons[i].hovercolor = 'lightcoral'
                                 #button.ax.set_facecolor('lightcoral' if button.ax.get_facecolor() != (1.0, 1.0, 0.6274509803921569, 1.0) else button.ax.get_facecolor())
-                            elif float(cell_dict[alph][29]) / np.average(nc_num) >= 1.5:
+                            elif float(cell_dict[alph][29]) / np.average(nc_num) >= 1.5 and button_states[i]:
                                 print(cell_dict[alph][29])
                                 buttons[i].color = 'orange'
                                 buttons[i].hovercolor = 'wheat'
                                 buttons[i].ax.set_facecolor('orange')
-                            else:
+                            elif button_states[i]:
                                 buttons[i].color = 'lightblue'
+                                buttons[i].hovercolor = '#7fb1b3'
+                            else: 
+                                buttons[i].color = 'cadetblue'
                                 buttons[i].hovercolor = '#7fb1b3'
                         i += 1
                 button.canvas.draw()
