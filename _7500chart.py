@@ -141,7 +141,7 @@ def main():
                     buttons[index].color = 'yellow'
                     buttons[index].hovercolor = 'lightyellow'
                     buttons[index].ax.set_facecolor('lightyellow')
-                    buttons[index].canvas.draw()
+                    #buttons[index].canvas.draw()
                 elif index not in hide_index and index in nc:
                     nc.remove(index)
                     nc_num.remove(cell_dict[alp][29])
@@ -162,7 +162,8 @@ def main():
                                 print(cell_dict[alph][29])
                                 buttons[i].color = 'red'
                                 buttons[i].hovercolor = 'lightcoral'
-                                #button.ax.set_facecolor('lightcoral' if button.ax.get_facecolor() != (1.0, 1.0, 0.6274509803921569, 1.0) else button.ax.get_facecolor())
+                                buttons[i].ax.set_facecolor('red')
+                                #button.ax.set_facecolor('lightcoral' if button.ax.get_facecolor() != (1.0, 1.0, 0.6274509803921569, 1.0) else button.ax.get_facecolor())                            
                             elif float(cell_dict[alph][29]) / np.average(nc_num) >= 1.5 and button_states[i]:
                                 print(cell_dict[alph][29])
                                 buttons[i].color = 'orange'
@@ -171,18 +172,20 @@ def main():
                             elif button_states[i]:
                                 buttons[i].color = 'lightblue'
                                 buttons[i].hovercolor = '#7fb1b3'
+                                buttons[i].ax.set_facecolor('lightblue')
                             else: 
                                 buttons[i].color = 'cadetblue'
                                 buttons[i].hovercolor = '#7fb1b3'
+                                buttons[i].ax.set_facecolor('cadetblue')
                         i += 1
-                button.canvas.draw()
                 # 文本显示
                 if text_obj:
                     text_obj.remove()
-                text_obj = ax.text(0.5, 0.5, np.average(nc_num) if nc_num else '', fontsize=30)
+                text_obj = ax.text(0.5, 0.5, f'average:{np.average(nc_num)}' if nc_num else '', fontsize=30)
 
                 
-            fig.canvas.draw_idle()
+            #fig.canvas.draw_idle()
+            fig.canvas.draw()
         return callback
     
 
