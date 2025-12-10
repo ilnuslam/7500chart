@@ -5,7 +5,7 @@ from matplotlib.gridspec import GridSpec
 import re
 import xlrd
 import tkinter as tk
-from tkinter import N, filedialog
+from tkinter import BUTT, N, filedialog
 import sys
 import os
 
@@ -28,7 +28,6 @@ def choose_xls_doc():
     print(excel_path)
     file_type = os.path.splitext(excel_path)
     return excel_path, file_type 
-
 
 def main():
     #选择Excel文件
@@ -81,7 +80,7 @@ def main():
         lines.append(line)
         # 绘制最后一个点的marker
         scatter = ax.scatter(x_values[-1], y_values[-1], color=line.get_color(), 
-                            marker='o', s=50, zorder=3)
+                            marker='<', s = 100, zorder=3)
         scatters.append(scatter)
 
     for scatter in scatters:
@@ -116,27 +115,61 @@ def main():
                 button_states[index] = not button_states[index]
                 if button_states[index] and index not in hide_index:
                     lines[index].set_alpha(1.0)
-                    buttons[index].color = 'lightblue'
-                    buttons[index].hovercolor = '#7fb1b3'
+                    if not nc:
+                        buttons[index].color = 'lightblue'
+                        buttons[index].hovercolor = '#7fb1b3'
+                    elif float(cell_dict[alp][29]) / np.average(nc_num) >= 2:
+                        buttons[index].color = 'red'
+                        buttons[index].hovercolor = 'lightcoral'
+                    elif float(cell_dict[alp][29]) / np.average(nc_num) >= 1.5:
+                        buttons[index].color = 'orange'
+                        buttons[index].hovercolor = 'wheat'
                 elif index not in hide_index:
                     lines[index].set_alpha(0.0)
                     buttons[index].color = 'cadetblue'
                     buttons[index].hovercolor = '#7fb1b3'
-            elif event.button == 3:
-                buttons[index].color = 'yellow' if index not in hide_index else 'dimgray' # 需要优化
-                buttons[index].hovercolor = 'lightyellow' if index not in hide_index else 'dimgray'
-                
+                    buttons[index].ax.set_facecolor('#7fb1b3')
+            elif event.button == 3:  
                 # 平均值计算
                 if index not in hide_index and index not in nc:
                     nc.append(index)
                     nc_num.append(cell_dict[alp][29])
                     scatters[index].set_visible(True)
+                    buttons[index].color = 'yellow'
+                    buttons[index].hovercolor = 'lightyellow'
+                    buttons[index].ax.set_facecolor('lightyellow')
+                    buttons[index].canvas.draw()
                 elif index not in hide_index and index in nc:
                     nc.remove(index)
                     nc_num.remove(cell_dict[alp][29])
                     scatters[index].set_visible(False)
-                    buttons[index].color = 'lightblue'
-                    buttons[index].hovercolor = 'skyblue'
+                    if button_states[index]:
+                        buttons[index].color = 'lightblue'
+                    else:
+                        buttons[index].color = 'cadetblue'
+                    buttons[index].hovercolor = '#7fb1b3'
+                    buttons[index].ax.set_facecolor('#7fb1b3')
+
+                i = 0
+                for row in range(8):
+                    for col in range(12):
+                        alph = f'{chr(row + 65)}{col + 1}'
+                        if i not in hide_index and i not in nc:
+                            if float(cell_dict[alph][29]) / np.average(nc_num) >= 2:
+                                print(cell_dict[alph][29])
+                                buttons[i].color = 'red'
+                                buttons[i].hovercolor = 'lightcoral'
+                                #button.ax.set_facecolor('lightcoral' if button.ax.get_facecolor() != (1.0, 1.0, 0.6274509803921569, 1.0) else button.ax.get_facecolor())
+                            elif float(cell_dict[alph][29]) / np.average(nc_num) >= 1.5:
+                                print(cell_dict[alph][29])
+                                buttons[i].color = 'orange'
+                                buttons[i].hovercolor = 'wheat'
+                                buttons[i].ax.set_facecolor('orange')
+                            else:
+                                buttons[i].color = 'lightblue'
+                                buttons[i].hovercolor = '#7fb1b3'
+                        i += 1
+                button.canvas.draw()
                 # 文本显示
                 if text_obj:
                     text_obj.remove()
